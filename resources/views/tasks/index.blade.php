@@ -22,6 +22,8 @@
             </tbody>
         </table>
     @endif
+    
+     {!! link_to_route('messages.create', '新規タスクの作成', [], ['class' => 'btn btn-primary']) !!}
 
 
 @endsection
