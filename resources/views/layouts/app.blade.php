@@ -24,6 +24,7 @@
                 </div>
             </nav>
         </header>
+        
 
         <div class="container">
             @yield('content')
