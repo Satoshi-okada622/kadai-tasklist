@@ -6,6 +6,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
     </head>
+    
+  
 
     <body>
         <header class="mb-4">
@@ -19,6 +21,8 @@
                 <div class="collapse navbar-collapse" id="nav-bar">
                     <ul class="navbar-nav mr-auto"></ul>
                     <ul class="navbar-nav">
+                         @include('commons.navbar')
+
                         <li class="nav-item">{!! link_to_route('tasks.create', '新規タスクの作成', [], ['class' => 'nav-link']) !!}</li>
                     </ul>
                 </div>
@@ -27,6 +31,7 @@
         
 
         <div class="container">
+            @include('commons.error_messages')
             @yield('content')
         </div>
 

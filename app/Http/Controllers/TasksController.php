@@ -7,19 +7,35 @@ use App\Task;
 
 class TasksController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
      public function index()
-    {    
-        $tasks = Task::all();
+    {   
+        $data = [];
+        if (\Auth::check()) {
+            $user = \Auth::user();
+            
+            $tasks = $user->tasks()->orderBy('created_at', 'desc')->paginate(10);
+
+            $data = [
+                'user' => $user,
+                'tasks' => $tasks,
+            ];
+            
+            return view('tasks.index', $data);
+        }
         
-        return view('tasks.index', [
-            'tasks' => $tasks,
-        ]);
+        return redirect('login');
     }
 
     public function create()
     {
         $task = new Task;
-
+        
+       
         return view('tasks.create', [
             'task' => $task,
         ]);
@@ -32,11 +48,15 @@ class TasksController extends Controller
             'content' => 'required|max:255',
         ]);
         
-       
+        $request->user()->tasks()->create([
+            'content' => $request->content,
+            'user_id' => $request->user_id
+        ]);
 
         $task = new Task;
         $task->status = $request->status;
         $task->content = $request->content;
+        $task->user_id = $request->user()->id;
         $task->save();
         
         return redirect('/');
@@ -73,7 +93,9 @@ class TasksController extends Controller
         
         $task->status = $request->status; 
         $task->content = $request->content;
+        $task->user_id = $request->user()->id;
         $task->save();
+        
         
         return redirect('/');
     }
@@ -82,7 +104,9 @@ class TasksController extends Controller
     {
         $task = Task::findOrFail($id);
         
-        $task->delete();
+        if (\Auth::id() === $task->user_id) {
+            $task->delete();
+        }
         
         return redirect('/');
     }
