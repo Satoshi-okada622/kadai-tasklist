@@ -50,12 +50,12 @@ class TasksController extends Controller
         
         $request->user()->tasks()->create([
             'content' => $request->content,
-            'user_id' => $request->user_id
         ]);
 
         $task = new Task;
         $task->status = $request->status;
         $task->content = $request->content;
+        // $tasks->user_id = auth()->id();
         $task->user_id = $request->user()->id;
         $task->save();
         
