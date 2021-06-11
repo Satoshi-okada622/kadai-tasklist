@@ -28,7 +28,7 @@ class TasksController extends Controller
             return view('tasks.index', $data);
         }
         
-        return redirect('login');
+        // return redirect('login');
     }
 
     public function create()
@@ -43,14 +43,15 @@ class TasksController extends Controller
 
     public function store(Request $request)
     {
+        var_dump($request->all());
         $request->validate([
             'status' => 'required|max:10',   
             'content' => 'required|max:255',
         ]);
         
-        $request->user()->tasks()->create([
-            'content' => $request->content,
-        ]);
+        // $request->user()->tasks()->create([
+        //     'content' => $request->content,
+        // ]);
 
         $task = new Task;
         $task->status = $request->status;
