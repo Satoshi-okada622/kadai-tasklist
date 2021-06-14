@@ -12,6 +12,7 @@ class TasksController extends Controller
         $this->middleware('auth');
     }
     
+    
      public function index()
     {   
         $data = [];
@@ -28,7 +29,9 @@ class TasksController extends Controller
             return view('tasks.index', $data);
         }
         
-        // return redirect('login');
+       
+         return redirect('login');
+        
     }
 
     public function create()
@@ -66,15 +69,23 @@ class TasksController extends Controller
     public function show($id)
     {
         $task = Task::findOrFail($id);
-
-        return view('tasks.show', [
-            'task' => $task,
-        ]);
+        
+        if (\Auth::id() === $task->user_id) {
+            return view('tasks.show', [
+                'task' => $task,
+            ]);            
+        }
+        
+        return redirect('/');
     }
 
     public function edit($id)
     {
         $task = Task::findOrFail($id);
+        
+        if (\Auth::id() === $task->user_id) {
+            $task->edit();
+        }
 
         return view('tasks.edit', [
             'task' => $task,
@@ -91,6 +102,10 @@ class TasksController extends Controller
         ]);
         
         $task = Task::findOrFail($id);
+        
+        if (\Auth::id() === $task->user_id) {
+            $task->update();
+        }
         
         $task->status = $request->status; 
         $task->content = $request->content;
